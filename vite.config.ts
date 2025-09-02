@@ -28,8 +28,12 @@ export default defineConfig(async ({ mode }) => {
     },
     root: path.resolve(__dirname, "client"),
     build: {
-      outDir: path.resolve(__dirname, "dist/public"),
+      // Output folder directly inside client/dist for Express
+      outDir: path.resolve(__dirname, "client/dist"),
       emptyOutDir: true,
+      rollupOptions: {
+        input: path.resolve(__dirname, "client/index.html"),
+      },
     },
     server: {
       fs: {
@@ -39,3 +43,4 @@ export default defineConfig(async ({ mode }) => {
     },
   };
 });
+
