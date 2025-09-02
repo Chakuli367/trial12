@@ -1,0 +1,128 @@
+GoalGrid – Product Development Overview
+1. Core Product Vision
+
+GoalGrid is an interactive social skills improvement platform that turns personal development into a game-like journey.
+It helps users who feel isolated, lack confidence, or struggle with making friends to:
+
+Take small, daily, real-life actions (e.g., smiling more, starting a conversation, giving compliments).
+
+Track and visualize progress using engaging, game-inspired dashboards.
+
+Receive AI-guided coaching (step-by-step guidance, role-play, and feedback).
+
+Stay motivated through gamified progression, streaks, achievements, and community.
+
+Think of it as Duolingo + SIMS for social skills.
+
+2. Main Features
+A. Onboarding + Signup
+
+Clean signup/login page (email, Google, or GitHub auth).
+
+Onboarding form asks: “What do you want to achieve?” (simple, one goal).
+
+Store user goals in backend DB.
+
+B. AI Guidance (Day-to-Day Experience)
+
+User gets daily missions powered by AI:
+
+Example: Day 1 → Smile at 3 people and note their reaction.
+
+Each day, the AI:
+
+Explains why this matters.
+
+Guides user through how to do it in real life.
+
+Provides live action support (role-play chatbot for planning, e.g., “How do I compliment someone without sounding awkward?”).
+
+Asks for reflection after completion.
+
+C. Gamification Layer
+
+Interactive Map Experience (H5P plugin in WordPress for now, later native):
+
+Each lesson is a map node users unlock.
+
+Nodes represent skills learned (e.g., “Genuine Interest”, “Complimenting”, “Conversations”).
+
+Progress Tracking:
+
+Donut charts (amCharts).
+
+Streak counters, badges, and milestones.
+
+Saved locally (localStorage) and per-user (WordPress + Firebase backend).
+
+D. Dashboard / Daily Overlay
+
+Full-page overlay (#goalPlannerOverlay) that shows:
+
+AI-generated plan (from LLaMA 3 backend).
+
+Animated donut chart of daily/weekly progress.
+
+Floating background animations (books, progress orbs).
+
+Badges and Achievements.
+
+Journaling area for reflection.
+
+E. AI Lesson Engine
+
+Based on Dale Carnegie’s How to Win Friends and Influence People.
+
+Lessons structured into multi-page HTML flows:
+
+Page 1: Concept explanation.
+
+Page 2: Why it matters.
+
+Page 3: Real-life application (with Buffett quotes, consequences, examples).
+
+Page 4: Interactive choice-based practice.
+
+Page 5: Reflection + AI plan for next action.
+
+F. Community + Accountability (Later Phase)
+
+Not just solo — users can:
+
+Join 5-day challenges.
+
+Share progress with others.
+
+Receive supportive feedback.
+
+3. Technical Stack
+
+Frontend (User Side)
+
+WordPress (Business Plan) + Custom HTML blocks for now.
+
+Interactive content via H5P plugin + CBX Take a Tour plugin.
+
+React components (for more advanced dashboards, Replit experiments).
+
+LocalStorage to cache progress.
+
+Backend
+
+LLaMA 3 AI backend for generating plans, lessons, and chatbot responses.
+
+Firebase for auth + user data storage.
+
+Node.js/Express microservices (e.g., /finalize-day-chat endpoint).
+
+Data Flow
+
+User enters goal → stored in DB.
+
+AI generates daily plan (saved under goalplanner_saved_plan).
+
+Plan rendered in overlay/dashboard.
+
+Progress updates (e.g., chart increments, badges).
+
+Reflections saved for continuity.
