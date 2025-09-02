@@ -50,28 +50,29 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // --- Frontend serving ---
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    // Production static serving (updated path)
-    const __dirname = path.resolve();
-    const clientDist = path.join(__dirname, "dist/public");
+ // --- Frontend serving ---
+if (app.get("env") === "development") {
+  await setupVite(app, server);
+} else {
+  // Production static serving (directly from client folder)
+  const __dirname = path.resolve();
+  const clientDist = path.join(__dirname, "client"); // <-- index.html is here
 
-    app.use(express.static(clientDist));
+  app.use(express.static(clientDist));
 
-    // Catch-all to serve index.html for SPA routing
-    app.get("*", (_, res: Response) => {
-      res.sendFile(path.join(clientDist, "index.html"), (err) => {
-        if (err) {
-          console.error("Error sending index.html:", err);
-          res.status(500).send("Internal Server Error");
-        }
-      });
+  // Catch-all to serve index.html for SPA routing
+  app.get("*", (_, res: Response) => {
+    res.sendFile(path.join(clientDist, "index.html"), (err) => {
+      if (err) {
+        console.error("Error sending index.html:", err);
+        res.status(500).send("Internal Server Error");
+      }
     });
+  });
 
-    log("Frontend static files served from: " + clientDist);
-  }
+  log("Frontend static files served from: " + clientDist);
+}
+
 
   // --- Start server ---
   const port = parseInt(process.env.PORT || "5000", 10);
