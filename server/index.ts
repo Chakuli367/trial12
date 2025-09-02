@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 // --- API request logging middleware ---
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
+  const pathReq = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
@@ -22,8 +22,8 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    if (pathReq.startsWith("/api")) {
+      let logLine = `${req.method} ${pathReq} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -54,9 +54,9 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    // Production static serving
+    // Production static serving (updated path)
     const __dirname = path.resolve();
-    const clientDist = path.join(__dirname, "client/dist");
+    const clientDist = path.join(__dirname, "dist/public");
 
     app.use(express.static(clientDist));
 
@@ -86,4 +86,5 @@ app.use((req, res, next) => {
     }
   );
 })();
+
 
