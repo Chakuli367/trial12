@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig(async ({ mode }) => {
   const plugins = [
     react(),
+    // This plugin is for Replit development and should not affect production
     runtimeErrorOverlay(),
   ];
 
@@ -28,7 +29,8 @@ export default defineConfig(async ({ mode }) => {
     },
     root: path.resolve(__dirname, "client"),
     build: {
-      // Output folder directly inside client/dist for Express
+      // The output folder is set to client/dist, which is correct.
+      // The server's build process should then reference this folder.
       outDir: path.resolve(__dirname, "client/dist"),
       emptyOutDir: true,
       rollupOptions: {
