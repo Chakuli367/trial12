@@ -12,12 +12,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const pathReq = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: Record<string, any> | undefined;
 
-  const originalResJson = res.json;
+  const originalResJson = res.json.bind(res);
   res.json = function (bodyJson, ...args) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+    return originalResJson(bodyJson, ...args);
   };
 
   res.on("finish", () => {
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    console.error(err);
   });
 
   // --- Frontend serving ---
@@ -55,15 +55,15 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     // Production static serving
-    const __dirname = path.resolve();
-    // Corrected path to point to the client's build output folder
-    const clientDist = path.join(__dirname, "client", "dist"); 
+    // __dirname in ES modules is not available; using path.resolve()
+    const clientDist = path.resolve("client", "dist"); 
 
     app.use(express.static(clientDist));
 
     // Catch-all to serve index.html for SPA routing
-    app.get("*", (_, res: Response) => {
-      res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    app.get("*", (_req, res: Response) => {
+      const indexFile = path.join(clientDist, "index.html");
+      res.sendFile(indexFile, (err) => {
         if (err) {
           console.error("Error sending index.html:", err);
           res.status(500).send("Internal Server Error");
@@ -87,4 +87,5 @@ app.use((req, res, next) => {
     }
   );
 })();
+
 
