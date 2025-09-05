@@ -22,19 +22,17 @@ export default defineConfig(async ({ mode }) => {
     plugins,
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "client", "src"),
+        "@": path.resolve(__dirname, "client/src"),
         "@shared": path.resolve(__dirname, "shared"),
         "@assets": path.resolve(__dirname, "attached_assets"),
       },
     },
-    root: path.resolve(__dirname, "client"),
+    root: path.resolve(__dirname, "client"), // frontend root
     build: {
-      // The output folder is set to client/dist, which is correct.
-      // The server's build process should then reference this folder.
-      outDir: path.resolve(__dirname, "client/dist"),
+      outDir: path.resolve(__dirname, "client/dist"), // output folder
       emptyOutDir: true,
       rollupOptions: {
-        input: path.resolve(__dirname, "client/index.html"),
+        input: path.resolve(__dirname, "client/index.html"), // main HTML file
       },
     },
     server: {
