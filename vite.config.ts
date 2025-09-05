@@ -2,20 +2,17 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "url";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(async ({ mode }) => {
-  const plugins = [
-    react(),
-    // This plugin is for Replit development and should not affect production
-    runtimeErrorOverlay(),
-  ];
+export default defineConfig(({ mode }) => {
+  const plugins = [react()];
 
-  if (mode !== "production" && process.env.REPL_ID !== undefined) {
-    const cartographer = await import("@replit/vite-plugin-cartographer");
-    plugins.push(cartographer.cartographer());
+  // Replit-specific dev plugins
+  if (mode !== "production" && process.env.REPL_ID) {
+    import("@replit/vite-plugin-cartographer").then(({ cartographer }) => {
+      plugins.push(cartographer());
+    });
   }
 
   return {
@@ -43,4 +40,3 @@ export default defineConfig(async ({ mode }) => {
     },
   };
 });
-
